@@ -88,18 +88,6 @@ fun TodoDetailScreen(
                             .padding(16.dp),
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        if (isFromCache) {
-                            AssistChip(
-                                onClick = {},
-                                label = { Text("⚠ Loaded from cache") },
-                                colors = AssistChipDefaults.assistChipColors(
-                                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                                    labelColor = MaterialTheme.colorScheme.onSecondaryContainer
-                                ),
-                                modifier = Modifier.fillMaxWidth()
-                            )
-                        }
-
                         Card(
                             modifier = Modifier.fillMaxWidth(),
                             colors = CardDefaults.cardColors(

@@ -15,6 +15,16 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.todocomposeapp.viewmodel.TodoListViewModel
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.material3.Divider
+import androidx.compose.ui.draw.clip
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,7 +45,7 @@ fun TodoListScreen(
                 title = {
                     Text(
                         "Todo List",
-                        style = MaterialTheme.typography.titleLarge,
+                        style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.ExtraBold, fontSize = MaterialTheme.typography.titleLarge.fontSize * 1.2),
                         color = MaterialTheme.colorScheme.onPrimary
                     )
                 },
@@ -58,7 +68,14 @@ fun TodoListScreen(
             modifier = Modifier
                 .padding(padding)
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(
+                            MaterialTheme.colorScheme.primary.copy(alpha = 0.08f),
+                            MaterialTheme.colorScheme.background
+                        )
+                    )
+                )
         ) {
             when {
                 isLoading.value -> Box(
@@ -86,7 +103,7 @@ fun TodoListScreen(
                     if (isFromCache.value) {
                         AssistChip(
                             onClick = {},
-                            label = { Text("⚠ Loaded from cache") },
+                            label = { Text("⚠ Offline mode") },
                             colors = AssistChipDefaults.assistChipColors(
                                 containerColor = MaterialTheme.colorScheme.secondaryContainer,
                                 labelColor = MaterialTheme.colorScheme.onSecondaryContainer
@@ -101,13 +118,14 @@ fun TodoListScreen(
 
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
-                        contentPadding = PaddingValues(16.dp)
+                        verticalArrangement = Arrangement.spacedBy(14.dp),
+                        contentPadding = PaddingValues(12.dp)
                     ) {
                         items(todos.value) { todo ->
                             Card(
                                 modifier = Modifier
                                     .fillMaxWidth()
+                                    .clip(RoundedCornerShape(8.dp))
                                     .clickable { navController.navigate("detail/${todo.id}") },
                                 colors = CardDefaults.cardColors(
                                     containerColor = MaterialTheme.colorScheme.surface
@@ -119,24 +137,21 @@ fun TodoListScreen(
                                 Row(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .padding(16.dp),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                        .padding(22.dp),
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Column(modifier = Modifier.weight(1f)) {
                                         Text(
                                             todo.title,
-                                            style = MaterialTheme.typography.titleMedium,
+                                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Medium, fontSize = MaterialTheme.typography.titleMedium.fontSize * 1.08f),
                                             color = MaterialTheme.colorScheme.onSurface
                                         )
-                                        Spacer(modifier = Modifier.height(4.dp))
+                                        Spacer(modifier = Modifier.height(2.dp))
                                         Text(
                                             if (todo.completed) "✔ Completed" else "✘ Pending",
-                                            style = MaterialTheme.typography.bodyMedium,
-                                            color = if (todo.completed)
-                                                MaterialTheme.colorScheme.primary
-                                            else
-                                                MaterialTheme.colorScheme.error
+                                            style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Light),
+                                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                                         )
                                     }
                                     Checkbox(
@@ -145,10 +160,12 @@ fun TodoListScreen(
                                         colors = CheckboxDefaults.colors(
                                             checkedColor = MaterialTheme.colorScheme.primary,
                                             uncheckedColor = MaterialTheme.colorScheme.onSurface
-                                        )
+                                        ),
+                                        modifier = Modifier.size(18.dp)
                                     )
                                 }
                             }
+                            Divider(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.15f), thickness = 1.2.dp)
                         }
                     }
                 }

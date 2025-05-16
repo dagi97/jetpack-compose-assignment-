@@ -1,10 +1,10 @@
 package com.example.todocomposeapp.data.remote
 
 import com.example.todocomposeapp.data.model.Todo
-import retrofit2.Response
-import retrofit2.http.*
+
+import retrofit2.http.GET as GET1
 
 interface TodoApiService {
-    @GET("todos")
+    @GET1("todos")
     suspend fun getTodos(): List<Todo>
 }
